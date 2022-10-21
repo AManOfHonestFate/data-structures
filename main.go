@@ -1,1 +1,4 @@
-package data_structures
+package main
+
+func main() {
+}
