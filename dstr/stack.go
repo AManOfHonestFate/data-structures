@@ -2,6 +2,8 @@ package dstr
 
 import "errors"
 
+// Stack created with slice
+// Not very optimal, I know
 type Stack[T any] struct {
 	stack []T
 }
