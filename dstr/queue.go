@@ -12,28 +12,27 @@ type queue[T any] struct {
 	cap   int
 }
 
-func NewQueue[T any](arr []T) queue[T] {
+func NewQueue[T any]() queue[T] {
 	q := make([]T, defaultCapacity)
-	copy(q, arr)
-	return queue[T]{q, len(arr) - 1, 0, len(arr), defaultCapacity}
+	return queue[T]{q, 0, -1, 0, defaultCapacity}
 }
 
 func (q *queue[T]) Push(t T) {
 	q.count++
-	q.head++
+	q.tail++
 
-	if q.head >= q.cap {
+	if q.tail >= q.cap {
 		q.resize()
 	}
 
-	q.queue[q.head] = t
+	q.queue[q.tail] = t
 }
 
 func (q *queue[T]) Pop() (T, error) {
 	var val T
 	if q.count > 0 {
-		val = q.queue[q.tail]
-		q.tail++
+		val = q.queue[q.head]
+		q.head++
 		q.count--
 		return val, nil
 	}
@@ -69,8 +68,8 @@ func (q *queue[T]) resize() {
 	buff := make([]T, q.cap)
 	copy(buff, q.queue)
 	q.queue = buff
-	q.tail = 0
-	q.head = q.count - 1
+	q.head = 0
+	q.tail = q.count - 1
 }
 
 type Queue[T any] interface {
