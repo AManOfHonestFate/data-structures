@@ -4,20 +4,28 @@ import "errors"
 
 var defaultCapacity = 16
 
-type queue[T any] struct {
-	queue []T
+type Queue[T any] struct {
+	Queue []T
 	head  int
 	tail  int
 	count int
 	cap   int
 }
 
-func NewQueue[T any]() queue[T] {
-	q := make([]T, defaultCapacity)
-	return queue[T]{q, 0, -1, 0, defaultCapacity}
+type QueueI[T any] interface {
+	Push(T)
+	Pop() (T, error)
+	GetHead() (T, error)
+	GetTail() (T, error)
+	resize()
 }
 
-func (q *queue[T]) Push(t T) {
+func NewQueue[T any]() Queue[T] {
+	q := make([]T, defaultCapacity)
+	return Queue[T]{q, 0, -1, 0, defaultCapacity}
+}
+
+func (q *Queue[T]) Push(t T) {
 	q.count++
 	q.tail++
 
@@ -25,57 +33,49 @@ func (q *queue[T]) Push(t T) {
 		q.resize()
 	}
 
-	q.queue[q.tail] = t
+	q.Queue[q.tail] = t
 }
 
-func (q *queue[T]) Pop() (T, error) {
+func (q *Queue[T]) Pop() (T, error) {
 	var val T
 	if q.count > 0 {
-		val = q.queue[q.head]
+		val = q.Queue[q.head]
 		q.head++
 		q.count--
 		return val, nil
 	}
 
-	return val, errors.New("queue is empty")
+	return val, errors.New("Queue is empty")
 }
 
-func (q *queue[T]) GetHead() (T, error) {
+func (q *Queue[T]) GetHead() (T, error) {
 	var val T
 	if q.count > 0 {
-		val = q.queue[q.head]
+		val = q.Queue[q.head]
 		return val, nil
 	}
 
-	return val, errors.New("queue is empty")
+	return val, errors.New("Queue is empty")
 }
 
-func (q *queue[T]) GetTail() (T, error) {
+func (q *Queue[T]) GetTail() (T, error) {
 	var val T
 	if q.count > 0 {
-		val = q.queue[q.tail]
+		val = q.Queue[q.tail]
 		return val, nil
 	}
 
-	return val, errors.New("queue is empty")
+	return val, errors.New("Queue is empty")
 }
 
-func (q *queue[T]) resize() {
+func (q *Queue[T]) resize() {
 	if q.count > q.cap {
 		q.cap *= 2
 	}
 
 	buff := make([]T, q.cap)
-	copy(buff, q.queue)
-	q.queue = buff
+	copy(buff, q.Queue)
+	q.Queue = buff
 	q.head = 0
 	q.tail = q.count - 1
-}
-
-type Queue[T any] interface {
-	Push(T)
-	Pop() (T, error)
-	GetHead() (T, error)
-	GetTail() (T, error)
-	resize()
 }
