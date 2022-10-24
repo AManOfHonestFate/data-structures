@@ -8,6 +8,13 @@ type Stack[T any] struct {
 	stack []T
 }
 
+type StackI[T any] interface {
+	Push(newElem T)
+	Pop() (T, error)
+	Head() (T, error)
+	AsArray() []T
+}
+
 func NewStack[T any](arr []T) Stack[T] {
 	return Stack[T]{arr}
 }
@@ -42,11 +49,4 @@ func (s *Stack[T]) Head() (T, error) {
 
 func (s *Stack[T]) AsArray() []T {
 	return s.stack
-}
-
-type IStack[T any] interface {
-	Push(newElem T)
-	Pop() (T, error)
-	Head() (T, error)
-	AsArray() []T
 }
